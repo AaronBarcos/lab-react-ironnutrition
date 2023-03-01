@@ -1,23 +1,60 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import AddFormFood from './components/AddFormFood';
+import FoodBox from './components/FoodBox';
+import Search from './components/Search';
+
+import food from './foods.json';
 
 function App() {
+
+  const [updatedFood, setUpdatedFood] = useState(food)
+  const [updatedFoodDisplay, setupdatedFoodDisplay] = useState(food)
+
+  const addNewFood = (newFood) => {
+    const foodArrClone = [...updatedFood]
+    foodArrClone.push(newFood)
+    setUpdatedFood(foodArrClone)
+    const foodDisplayArrClone = [...updatedFoodDisplay]
+    foodDisplayArrClone.push(newFood)
+    setupdatedFoodDisplay(foodDisplayArrClone)
+  }
+
+  const filterFromSearch = (searchedFood) => {
+    const filteredArrFood = updatedFood.filter((eachFood) => {
+      if (eachFood.name.includes(searchedFood)) {
+        return true; 
+      } else {
+        return false;
+      }
+    })
+    setupdatedFoodDisplay(filteredArrFood)
+  }
+
+  const deleteFood = (foodName) => {
+    const filteredArr = updatedFoodDisplay.filter(eachFood => eachFood.name !== foodName)
+    setupdatedFoodDisplay(filteredArr)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>List</h1>
+      <AddFormFood addNewFood={addNewFood}/>
+      <Search filterFromSearch={filterFromSearch} />
+      {updatedFoodDisplay.map((eachFood) => {
+        return (
+          <FoodBox 
+            food={{
+          name: eachFood.name,
+          calories: eachFood.calories,
+          image: eachFood.image,
+          servings: eachFood.servings
+        }}
+        key={eachFood.name}
+        deleteFood={deleteFood}
+          />
+        );
+      })}
     </div>
   );
 }
