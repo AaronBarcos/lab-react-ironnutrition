@@ -10,6 +10,7 @@ function App() {
 
   const [updatedFood, setUpdatedFood] = useState(food)
   const [updatedFoodDisplay, setupdatedFoodDisplay] = useState(food)
+  const [isHide, setIsHide] = useState(true)
 
   const addNewFood = (newFood) => {
     const foodArrClone = [...updatedFood]
@@ -36,10 +37,19 @@ function App() {
     setupdatedFoodDisplay(filteredArr)
   }
 
+  const displayAddForm = () => {
+    setIsHide(false);
+  }
+  const hideAddForm = () => {
+    setIsHide(true);
+  }
+
   return (
     <div className="App">
       <h1>List</h1>
-      <AddFormFood addNewFood={addNewFood}/>
+      <button onClick={displayAddForm}>Display form</button>    
+      {isHide === false ? <AddFormFood addNewFood={addNewFood}/> : null}    
+      {isHide === false ? <button onClick={hideAddForm}>Hide form</button> : null}    
       <Search filterFromSearch={filterFromSearch} />
       {updatedFoodDisplay.map((eachFood) => {
         return (
